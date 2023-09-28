@@ -36,7 +36,7 @@ def train_model(csv_file):
     ligand_features = pd.read_csv(
         "data/features/"
         + csv_file.split("/")[-1].split(".")[0]
-        + "_ligand_features.csv",
+        + "_ligand_bias_features.csv",
         index_col=0,
     )
     all_embeddings = ligand_features
@@ -51,7 +51,7 @@ def predict_model(model_name, csv_file, data_dir):
     ligand_features = pd.read_csv(
         "data/features/"
         + csv_file.split("/")[-1].split(".")[0]
-        + "_ligand_features.csv",
+        + "_ligand_bias_features.csv",
         index_col=0,
     )
     all_embeddings = ligand_features
@@ -75,7 +75,9 @@ def generate_rdkit_features(csv_file, data_dir):
         features[pdb] = [result[feature_name] for feature_name in feature_names]
     data = pd.DataFrame(features, index=feature_names).T
     data.to_csv(
-        f"data/features/{csv_file.split('/')[-1].split('.')[0]}_ligand_features.csv"
+        "data/features/"
+        + f"{csv_file.split('/')[-1].split('.')[0]}"
+        + "_ligand_bias_features.csv"
     )
     return None
 
@@ -114,7 +116,7 @@ if __name__ == "__main__":
         if not os.path.exists(
             "data/features/"
             + f"{args.csv_file.split('/')[-1].split('.')[0]}"
-            + "_ligand_features.csv"
+            + "_ligand_bias_features.csv"
         ):
             generate_rdkit_features(args.csv_file, args.data_dir)
         model = train_model(args.csv_file)
@@ -127,7 +129,7 @@ if __name__ == "__main__":
         if not os.path.exists(
             "data/features/"
             + f"{args.val_csv_file.split('/')[-1].split('.')[0]}"
-            + "_ligand_features.csv"
+            + "_ligand_bias_features.csv"
         ):
             generate_rdkit_features(args.val_csv_file, args.val_data_dir)
         model = pickle.load(open(f"data/models/{args.model_name}.pkl", "rb"))
