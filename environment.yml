@@ -1,4 +1,4 @@
-name: ligand_bias
+name: ligandbias
 channels:
   - conda-forge
   - defaults
