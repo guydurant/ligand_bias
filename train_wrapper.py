@@ -9,6 +9,7 @@ import warnings
 from joblib import Parallel, delayed
 from rdkit import Chem, RDLogger
 from rdkit.Chem import Descriptors
+from rdkit_features_names import RDKIT_FEATURE_NAMES
 
 RDLogger.DisableLog("*")
 warnings.filterwarnings("ignore")
@@ -63,7 +64,7 @@ def predict_model(model_name, csv_file, data_dir):
 def generate_rdkit_features(csv_file, data_dir):
     if not os.path.exists("data/features"):
         os.makedirs("data/features")
-    feature_names = get_rdkit_features_names()
+    feature_names = RDKIT_FEATURE_NAMES
     _, ligand_files, keys, _ = load_csv(csv_file, data_dir)
     with Parallel(n_jobs=-1) as parallel:
         results = parallel(
@@ -80,11 +81,6 @@ def generate_rdkit_features(csv_file, data_dir):
         + "_ligand_bias_features.csv"
     )
     return None
-
-
-def get_rdkit_features_names():
-    with open("rdkit_feature_names.txt", "r") as f:
-        return f.read().splitlines()
 
 
 def get_rdkit_features(ligand_file, feature_names):
